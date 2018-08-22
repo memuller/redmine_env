@@ -1,22 +1,36 @@
-version: '3.3'
+version: '3.6'
 
 services:
 
   redmine:
     image: redmine:3.4.6
-    ports:
-      - 8080:3000
+    # if not using nginx-proxy
+    # ports:
+    #   - 8080:3000
     environment:
       REDMINE_DB_POSTGRES: db
       REDMINE_DB_PASSWORD: '1234'
+      VIRTUAL_HOST: redmine.test 
     volumes:
       - type: bind
         source: ./plugins
         target: /usr/src/redmine/plugins
     depends_on:
       - db
+    networks:
+      - default
+      - nginx_proxy
 
   db:
     image: postgres:10-alpine
     environment:
       POSTGRES_PASSWORD: '1234'
+    networks:
+      - default
+      - databases
+
+networks:
+  nginx_proxy:
+    external: true
+  databases:
+    external: true
