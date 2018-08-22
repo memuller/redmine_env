@@ -9,6 +9,10 @@ services:
     environment:
       REDMINE_DB_POSTGRES: db
       REDMINE_DB_PASSWORD: '1234'
+    volumes:
+      - type: bind
+        source: ./plugins
+        target: /usr/src/redmine/plugins
     depends_on:
       - db
 
